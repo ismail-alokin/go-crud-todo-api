@@ -10,6 +10,6 @@ COPY .. .
 RUN go get github.com/githubnemo/CompileDaemon
 RUN go install github.com/githubnemo/CompileDaemon
 
-ENTRYPOINT CompileDaemon -build="go build -o api" -command="./api"
+ENTRYPOINT CompileDaemon -build="go build -o bin/todo-api" -command="./bin/todo-api"
 
 EXPOSE 8081

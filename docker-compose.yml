@@ -31,9 +31,6 @@ services:
     networks:
       - internal_sample
 
-# volumes:
-#   dbdata:
-
 networks:
   internal_sample:
     driver: bridge
