@@ -1,0 +1,39 @@
+version: '3.8'
+
+name: go-gin-sample-1
+
+services:
+
+  go-api-sample:
+    container_name: go-api-sample
+    build:
+      context: .
+      dockerfile: go.Dockerfile
+    env_file:
+      - ./dev.env
+    ports:
+      - 8081:8081
+    volumes:
+      - ./:/app
+    networks:
+      - internal_sample
+
+  edgedb:
+    image: edgedb/edgedb
+    container_name: edgedb
+    env_file:
+      - ./dev.env
+    volumes:
+      - ./.dbdata:/var/lib/edgedb/data
+      - ./dbschema:/dbschema
+    ports:
+      - 5656:5656
+    networks:
+      - internal_sample
+
+# volumes:
+#   dbdata:
+
+networks:
+  internal_sample:
+    driver: bridge
