@@ -8,10 +8,10 @@ import (
 )
 
 func InitializeRoutes(router *gin.Engine) {
+	router.Use(middlewares.LogRequest)
 	router.GET("/time", handlers.ReturnTime)
 
 	api := router.Group("/api")
-	api.Use(middlewares.LogRequest)
 
 	tasksApi := api.Group("/tasks")
 

@@ -9,9 +9,11 @@ var InsertTaskQuery = `
 `
 var GetTaskQuery = `
 	SELECT taskSchema::Tasks { 
+		id,
 		title, 
 		description, 
-		due_date 
+		due_date,
+		created_at
 	} FILTER .id = <uuid>$id;
 `
 

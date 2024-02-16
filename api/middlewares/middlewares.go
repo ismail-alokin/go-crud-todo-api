@@ -6,6 +6,6 @@ import (
 )
 
 func LogRequest(c *gin.Context) {
-	logger.Println(c.Request.RequestURI)
+	logger.Printf("%v: %v", c.Request.Method, c.Request.RequestURI)
 	c.Next()
 }
