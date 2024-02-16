@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	logger.Println("Starting server")
 	defer db.DbClient.Close()
+	logger.Println("Starting server")
 
 	router := gin.Default()
 	routes.InitializeRoutes(router)

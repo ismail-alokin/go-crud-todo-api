@@ -7,36 +7,6 @@ import (
 	"github.com/ismail-alokin/go-crud-api-todo/config/db"
 )
 
-func CreateTask(c *gin.Context) {
-	var requestBody struct {
-		Task TaskModel `json:"task"`
-	}
-
-	err := c.BindJSON(&requestBody)
-	handlers.CheckHttpBadRequest(c, err)
-
-	params := map[string]interface{}{
-		"title":       requestBody.Task.Title,
-		"description": requestBody.Task.Description,
-		"due_date":    requestBody.Task.Due_date,
-	}
-
-	var resultTask TaskModel
-
-	edgeDbErr := db.DbClient.QuerySingle(c.Request.Context(), InsertTaskQuery, &resultTask, params)
-	if handlers.CheckDbQueryFailure(c, edgeDbErr) {
-		return
-	}
-
-	response := map[string]interface{}{
-		"message": "Task added successfully",
-		"task": map[string]interface{}{
-			"id": resultTask.ID,
-		},
-	}
-	handlers.SendSuccessJSONResponse(c, response)
-}
-
 func GetAllTasks(c *gin.Context) {
 	var tasks []TaskModel
 
@@ -76,6 +46,38 @@ func GetTask(c *gin.Context) {
 	handlers.SendSuccessJSONResponse(c, response)
 }
 
+func CreateTask(c *gin.Context) {
+	var requestBody struct {
+		Task TaskModel `json:"task"`
+	}
+
+	jsonParseErr := c.ShouldBindJSON(&requestBody)
+	if handlers.CheckHttpBadRequest(c, jsonParseErr) {
+		return
+	}
+
+	params := map[string]interface{}{
+		"title":       requestBody.Task.Title,
+		"description": requestBody.Task.Description,
+		"due_date":    requestBody.Task.Due_date,
+	}
+
+	var resultTask TaskModel
+
+	edgeDbErr := db.DbClient.QuerySingle(c.Request.Context(), InsertTaskQuery, &resultTask, params)
+	if handlers.CheckDbQueryFailure(c, edgeDbErr) {
+		return
+	}
+
+	response := map[string]interface{}{
+		"message": "Task added successfully",
+		"task": map[string]interface{}{
+			"id": resultTask.ID,
+		},
+	}
+	handlers.SendSuccessJSONResponse(c, response)
+}
+
 func UpdateTask(c *gin.Context) {
 	taskId := c.Param("taskId")
 
@@ -88,8 +90,10 @@ func UpdateTask(c *gin.Context) {
 		Task TaskModel `json:"task"`
 	}
 
-	jsonParseErr := c.BindJSON(&requestBody)
-	handlers.CheckHttpBadRequest(c, jsonParseErr)
+	jsonParseErr := c.ShouldBindJSON(&requestBody)
+	if handlers.CheckHttpBadRequest(c, jsonParseErr) {
+		return
+	}
 
 	params := map[string]interface{}{
 		"id":          uuid,
