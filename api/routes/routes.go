@@ -18,6 +18,10 @@ func InitializeRoutes(router *gin.Engine) {
 	{
 		tasksApi.GET("/", tasks.GetAllTasks)
 		tasksApi.POST("/", tasks.CreateTask)
+
+		tasksApi.GET("/:taskId", tasks.GetTask)
+		tasksApi.PUT("/:taskId", tasks.UpdateTask)
+		tasksApi.DELETE("/:taskId", tasks.DeleteTask)
 	}
 
 }
